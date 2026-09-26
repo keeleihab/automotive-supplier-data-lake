@@ -1,0 +1,15 @@
+{
+	"name": "adf-plantlake-ihab02",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "germanywestcentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8f838079-61ad-49a6-9d81-48b2f559fd8f",
+		"tenantId": "7025e04c-70ca-48bf-ab7b-73954cb846ad"
+	}
+}
