@@ -45,7 +45,102 @@
 						"value": "@activity('LookupControlTable').output.value",
 						"type": "Expression"
 					},
-					"isSequential": true
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "LookupNewWatermark",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": "SELECT CONVERT(VARCHAR(27), MAX(ModifiedDate), 126) AS NewWatermark FROM dbo.@{item().TableName}",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "ds_sql_plant_ma",
+									"type": "DatasetReference"
+								}
+							}
+						},
+						{
+							"name": "CopyIncremental",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "LookupNewWatermark",
+									"dependencyConditions": [
+										"Skipped"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 2,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "SELECT * FROM dbo.@{item().TableName}\n  WHERE ModifiedDate > '@{item().LastWatermark}'\n    AND ModifiedDate <= '@{activity('LookupNewWatermark').output.firstRow.NewWatermark}'",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_sql_plant_ma",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_bronze_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"FolderPath": {
+											"value": "plant_ma/@{item().TableName}/@{formatDateTime(utcNow(),'yyyy/MM/dd')}",
+											"type": "Expression"
+										},
+										"FileName": "@{item().TableName}_@{formatDateTime(utcNow(),'yyyyMMdd_HHmmss')}.parquet"
+									}
+								}
+							]
+						}
+					]
 				}
 			}
 		],
