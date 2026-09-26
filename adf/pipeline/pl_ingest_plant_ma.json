@@ -1,0 +1,54 @@
+{
+	"name": "pl_ingest_plant_ma",
+	"properties": {
+		"activities": [
+			{
+				"name": "LookupControlTable",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "       SELECT TableName, CONVERT(VARCHAR(27), LastWatermark, 126) AS LastWatermark\n       FROM etl.ControlTable\n       WHERE IsActive = 1\n       ORDER BY TableName",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_sql_plant_ma",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEachTable",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "LookupControlTable",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('LookupControlTable').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
