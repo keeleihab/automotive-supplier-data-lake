@@ -35,7 +35,7 @@
 					{
 						"activity": "LookupControlTable",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
@@ -62,7 +62,10 @@
 							"typeProperties": {
 								"source": {
 									"type": "AzureSqlSource",
-									"sqlReaderQuery": "SELECT CONVERT(VARCHAR(27), MAX(ModifiedDate), 126) AS NewWatermark FROM dbo.@{item().TableName}",
+									"sqlReaderQuery": {
+										"value": "SELECT CONVERT(VARCHAR(27), MAX(ModifiedDate), 126) AS NewWatermark FROM dbo.@{item().TableName}",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
@@ -79,7 +82,7 @@
 								{
 									"activity": "LookupNewWatermark",
 									"dependencyConditions": [
-										"Skipped"
+										"Succeeded"
 									]
 								}
 							],
@@ -147,7 +150,7 @@
 								{
 									"activity": "CopyIncremental",
 									"dependencyConditions": [
-										"Skipped"
+										"Succeeded"
 									]
 								}
 							],
@@ -170,7 +173,10 @@
 										"type": "String"
 									},
 									"TableName": {
-										"value": "@{item().TableName}",
+										"value": {
+											"value": "@{item().TableName}",
+											"type": "Expression"
+										},
 										"type": "String"
 									}
 								}
