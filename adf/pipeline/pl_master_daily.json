@@ -1,0 +1,20 @@
+{
+	"name": "pl_master_daily",
+	"properties": {
+		"activities": [
+			{
+				"name": "RunPlantMA",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
