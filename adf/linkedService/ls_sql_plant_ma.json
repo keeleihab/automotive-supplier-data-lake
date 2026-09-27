@@ -1,0 +1,23 @@
+{
+	"name": "ls_sql_plant_ma",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "sql-plantma-ihab02.database.windows.net",
+			"database": "plant_ma_db",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "sqladmin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_keyvault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sql-admin-password"
+			}
+		}
+	}
+}

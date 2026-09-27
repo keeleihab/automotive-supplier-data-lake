@@ -1,0 +1,12 @@
+{
+	"name": "ds_sql_plant_ma",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_sql_plant_ma",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
