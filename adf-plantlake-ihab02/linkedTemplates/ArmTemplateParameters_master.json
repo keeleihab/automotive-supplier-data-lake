@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-plantlake-ihab02"
+		},
+		"ls_adls_properties_typeProperties_url": {
+			"value": "https://stplantlakeihab02.dfs.core.windows.net/"
+		},
+		"ls_keyvault_properties_typeProperties_baseUrl": {
+			"value": "https://kv-plantlake-ihab02.vault.azure.net/"
+		},
+		"ls_sql_plant_ma_properties_typeProperties_server": {
+			"value": "sql-plantma-ihab02.database.windows.net"
+		},
+		"ls_sql_plant_ma_properties_typeProperties_database": {
+			"value": "plant_ma_db"
+		},
+		"ls_sql_plant_ma_properties_typeProperties_userName": {
+			"value": "sqladmin"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
