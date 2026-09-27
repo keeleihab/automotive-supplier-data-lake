@@ -139,6 +139,46 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "UpdateWatermark",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "CopyIncremental",
+									"dependencyConditions": [
+										"Skipped"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[etl].[usp_UpdateWatermark]",
+								"storedProcedureParameters": {
+									"NewWatermark": {
+										"value": {
+											"value": "@{activity('LookupNewWatermark').output.firstRow.NewWatermark}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TableName": {
+										"value": "@{item().TableName}",
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ls_sql_plant_ma",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
